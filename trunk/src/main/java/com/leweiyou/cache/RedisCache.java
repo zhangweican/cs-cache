@@ -13,6 +13,8 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import com.leweiyou.tools.cfg.EnvUtil;
+
 /**
  * Redis缓存类
  * @author Zhangweican
@@ -22,7 +24,9 @@ public class RedisCache implements Cache {
 
 	private RedisTemplate<String, Object> redisTemplate;
 	private String name;
-
+	//存活时间
+	private Long liveTime = EnvUtil.getValue("redis.cache.live.time") == null ? 86400 : Long.valueOf(EnvUtil.getValue("redis.cache.live.time"));
+	
 	public RedisTemplate<String, Object> getRedisTemplate() {
 		return redisTemplate;
 	}
@@ -33,6 +37,14 @@ public class RedisCache implements Cache {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Long getLiveTime() {
+		return liveTime;
+	}
+
+	public void setLiveTime(Long liveTime) {
+		this.liveTime = liveTime;
 	}
 
 	@Override
@@ -69,7 +81,6 @@ public class RedisCache implements Cache {
 	public void put(Object key, Object value) {
 		final String keyf = (String) key;
 		final Object valuef = value;
-		final long liveTime = 86400;
 
 		redisTemplate.execute(new RedisCallback<Long>() {
 			public Long doInRedis(RedisConnection connection)
@@ -181,7 +192,6 @@ public class RedisCache implements Cache {
 	public ValueWrapper putIfAbsent(Object key, Object value) {
 		final String keyf = (String) key;
 		final Object valuef = value;
-		final long liveTime = 86400;
 
 		redisTemplate.execute(new RedisCallback<Long>() {
 			public Long doInRedis(RedisConnection connection)
