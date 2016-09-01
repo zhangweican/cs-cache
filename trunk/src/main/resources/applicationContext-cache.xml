@@ -30,8 +30,8 @@
 		<property name="caches">
 			<set>
 				<bean name="map" class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" />
-				<bean name="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" >
-				    <property name="configLocation" value="classpath:ehcache.xml" />
+				<bean name="ehcache" class="com.leweiyou.cache.ehcache.EhCacheCache" >
+				    <property name="cacheManagerFactory" ref="cacheManagerFactory" />
 				</bean>
 				<bean name="redis" class="com.leweiyou.cache.redis.RedisCache">    
 		            <property name="redisTemplate" ref="jedisTemplate" />    
@@ -39,5 +39,11 @@
 			</set>
 		</property>
 	</bean>
+
+    <!-- 若只想使用Spring自身提供的缓存器,则注释掉下面的两个关于Ehcache配置的bean,并启用上面的SimpleCacheManager即可 -->  
+    <!-- Spring提供的基于的Ehcache实现的缓存管理器 -->  
+    <bean id="cacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">  
+        <property name="configLocation" value="classpath:ehcache.xml"/>  
+    </bean> 
 
 </beans>
