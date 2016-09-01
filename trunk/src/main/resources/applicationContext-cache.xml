@@ -25,19 +25,37 @@
 	<!-- 启用缓存注解功能(请将其配置在Spring主配置文件中) -->
 	<cache:annotation-driven cache-manager="cacheManager" key-generator="baseKeyGenerator"/>
 	
+   <!-- ehCache 配置管理器 -->
+	<bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache.xml" />
+		<!--true:单例，一个cacheManager对象共享；false：多个对象独立 -->
+		<property name="shared" value="true" />
+		<property name="cacheManagerName" value="ehcacheManager" />
+	</bean>
+
+	<!-- ehCache 操作对象 -->
+	<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+		<property name="cacheName" value="ehcache" />
+		<property name="cacheManager" ref="ehcacheManager" />
+	</bean>
+
 	<!-- Spring自己的基于java.util.concurrent.ConcurrentHashMap实现的缓存管理器(该功能是从Spring3.1开始提供的) -->
 	<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
 		<property name="caches">
 			<set>
-				<bean name="map" class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" />
-				<bean name="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" >
-				    <property name="configLocation" value="classpath:ehcache.xml" />
+				<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+					<property name="name" value="map"/>
 				</bean>
-				<bean name="redis" class="com.leweiyou.cache.redis.RedisCache">    
+				<bean class="org.springframework.cache.ehcache.EhCacheCache" >
+					<constructor-arg index="0" ref="ehcache" />
+				</bean>
+				<bean class="com.leweiyou.cache.redis.RedisCache">    
 		            <property name="redisTemplate" ref="jedisTemplate" />    
+					<property name="name" value="redis"/>
 	            </bean>
 			</set>
 		</property>
 	</bean>
+
 
 </beans>

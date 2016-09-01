@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.cache.Cache;
 import org.springframework.cache.support.SimpleValueWrapper;
 import org.springframework.dao.DataAccessException;
@@ -25,7 +26,7 @@ public class RedisCache implements Cache {
 	private RedisTemplate<String, Object> redisTemplate;
 	private String name;
 	//存活时间
-	private Long liveTime = EnvUtil.getValue("redis.cache.live.time") == null ? 86400 : Long.valueOf(EnvUtil.getValue("redis.cache.live.time"));
+	private Long liveTime = StringUtils.isEmpty(EnvUtil.getValue("redis.cache.live.time")) ? 86400 : Long.valueOf(EnvUtil.getValue("redis.cache.live.time"));
 	
 	public RedisTemplate<String, Object> getRedisTemplate() {
 		return redisTemplate;

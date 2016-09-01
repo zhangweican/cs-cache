@@ -11,6 +11,13 @@
         diskPersistent="false"   
         timeToIdleSeconds="0"  
         timeToLiveSeconds="600"   
-        memoryStoreEvictionPolicy="LFU" />  
+        memoryStoreEvictionPolicy="LFU" /> 
+        
+     <cache name="commonCache"  
+           maxElementsOnDisk="20000"  
+           maxElementsInMemory="2000"  
+           eternal="true"  
+           overflowToDisk="true"  
+           diskPersistent="true"/>   
   
 </ehcache>  
