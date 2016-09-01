@@ -23,7 +23,7 @@
 	<!-- 自定义cache主键生成策略 -->  
 	<bean id="baseKeyGenerator" class="com.leweiyou.cache.BaseKeyGenerator" />
 	<!-- 启用缓存注解功能(请将其配置在Spring主配置文件中) -->
-	<cache:annotation-driven cache-manager="cacheManager" key-generator="baseKeyGenerator"/>
+	<cache:annotation-driven cache-manager="cacheManager" key-generator="baseKeyGenerator" />
 	
    <!-- ehCache 配置管理器 -->
 	<bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
@@ -56,6 +56,5 @@
 			</set>
 		</property>
 	</bean>
-
 
 </beans>

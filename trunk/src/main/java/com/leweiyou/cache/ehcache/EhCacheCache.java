@@ -1,7 +1,15 @@
 package com.leweiyou.cache.ehcache;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.cache.Cache;
+import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.ehcache.EhCacheFactoryBean;
+/**
+ * spring包里面已经有实现该方法的功能，所以这里不再使用
+ * @author Zhangweican
+ *
+ */
+import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 /**
  * spring包里面已经有实现该方法的功能，所以这里不再使用
  * @author Zhangweican
@@ -64,7 +72,4 @@ public class EhCacheCache implements Cache {
 	public void setEhCacheFactoryBean(EhCacheFactoryBean ehCacheFactoryBean) {
 		this.ehCacheFactoryBean = ehCacheFactoryBean;
 	}
-
-	
-	
 }
