@@ -1,4 +1,4 @@
-package com.leweiyou.cache.redis;
+package com.leweiyou.cache;
 
 /**
  * Cache的类型

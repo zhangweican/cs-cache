@@ -1,4 +1,4 @@
-package com.leweiyou.cache;
+package com.leweiyou.cache.redis;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
