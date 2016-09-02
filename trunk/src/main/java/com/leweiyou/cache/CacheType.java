@@ -5,6 +5,8 @@ package com.leweiyou.cache;
  * @author Zhangweican
  *
  */
-public enum CacheType {
-	map,ehcache,redis
+public class CacheType {
+	public final static String MAP = "map";
+	public final static String EHCACHE = "ehcache";
+	public final static String REDIS = "redis";
 }

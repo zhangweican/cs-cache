@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.cache.interceptor.KeyGenerator;
 
+import com.leweiyou.tools.utils.MD5;
+
 /**
  * 基于class的类名，参数组成键值
  * @author Zhangweican
@@ -41,8 +43,7 @@ public class BaseKeyGenerator implements KeyGenerator {
                 }  
             }  
         }  
-        int keyGenerator = buffer.toString().hashCode();  
-        return keyGenerator;  
+        return buffer.toString();  
     }  
   
 } 
