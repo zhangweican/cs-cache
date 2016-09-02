@@ -13,7 +13,7 @@
         timeToLiveSeconds="600"   
         memoryStoreEvictionPolicy="LFU" /> 
         
-     <cache name="commonCache"  
+     <cache name="ehcache"  
            maxElementsOnDisk="20000"  
            maxElementsInMemory="2000"  
            eternal="true"  
