@@ -1,10 +1,14 @@
 package com.leweiyou.cache.redis.queue;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -14,8 +18,10 @@ import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisConnectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import com.leweiyou.tools.cfg.EnvUtil;
+
 /**
- * 队列
+ * 队列（实现多线程）
  * @author Zhangweican
  *
  * @param <T>
@@ -33,7 +39,10 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 	private Lock lock = new ReentrantLock();//基于底层IO阻塞考虑
 	
 	private RedisQueueListener listener;//异步回调
-	private Thread listenerThread;
+	private int poolsNumbers = StringUtils.isEmpty(EnvUtil.getValue("redis.queue.thread.numbers")) ? 10 : Integer.valueOf(EnvUtil.getValue("redis.queue.thread.numbers"));
+	private ExecutorService pools = Executors.newFixedThreadPool(poolsNumbers);
+	
+	//private Thread listenerThread;
 	
 	private boolean isClosed;
 	
@@ -57,9 +66,9 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 		rawKey = redisTemplate.getKeySerializer().serialize(key);
 		listOperations = redisTemplate.boundListOps(key);
 		if(listener != null){
-			listenerThread = new ListenerThread();
-			listenerThread.setDaemon(true);
-			listenerThread.start();
+			for(int i = 0 ; i < poolsNumbers; i ++){
+				pools.execute(new ListenerThread(i + 1));
+			}
 		}
 	}
 	
@@ -142,30 +151,36 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 	
 	private void shutdown(){
 		try{
-			listenerThread.interrupt();
+			pools.shutdown();
 		}catch(Exception e){
 			//
 		}
 	}
 	
 	class ListenerThread extends Thread {
+		private int number;
+		
+		public ListenerThread(int number){
+			this.number = number;
+		}
 		
 		@Override
 		public void run(){
 			try{
 				while(true){
-					T value = takeFromHead();//cast exceptionyou should check.
-					//逐个执行
+					T value = takeFromHead();
 					if(value != null){
 						try{
+							logger.info("队列：" + key + " 线程：" + number + "开始处理请求");
 							listener.onMessage(value);
+							//logger.info("队列：" + key + " 线程：" + number + "处理完毕");
 						}catch(Exception e){
-							logger.error("redis queue error:",e);
+							logger.error("队列：" + key + " 线程：" + number + " 处理异常",e);
 						}
 					}
 				}
 			}catch(InterruptedException e){
-				//
+				logger.error("队列：" + key + " 线程：" + number + " 线程退出",e);
 			}
 		}
 	}
