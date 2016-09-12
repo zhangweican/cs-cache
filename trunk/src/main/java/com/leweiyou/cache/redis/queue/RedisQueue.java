@@ -173,7 +173,7 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 						try{
 							logger.info("队列：" + key + " 线程：" + number + "开始处理请求");
 							listener.onMessage(value);
-							//logger.info("队列：" + key + " 线程：" + number + "处理完毕");
+							logger.info("队列：" + key + " 线程：" + number + "处理完毕");
 						}catch(Exception e){
 							logger.error("队列：" + key + " 线程：" + number + " 处理异常",e);
 						}
