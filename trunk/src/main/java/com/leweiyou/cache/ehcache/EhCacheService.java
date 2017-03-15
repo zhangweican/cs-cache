@@ -4,7 +4,7 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.ehcache.EhCacheCache;
 /**
- * spring包里面已经有实现该方法的功能，所以这里不再使用
+ * 基于Ehcache的缓存类
  * @author Zhangweican
  *
  */
