@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.leweiyou.cache.CacheType;
+import com.leweiyou.cache.CompositeCacheManager;
 import com.leweiyou.cache.TestCache;
 
 public class CacheTest {
@@ -32,6 +34,18 @@ public class CacheTest {
 		testService.deleteA();
 		
 		
+	}
+	@Test
+	public void test2() {
+		String math = testService.selectA();
+		System.out.println(math);
+		CompositeCacheManager.setCacheType(CacheType.MAP);
+		testService.deleteA();
+		String math1 = testService.selectA();
+		System.out.println(math1);
+		CompositeCacheManager.setCacheType(CacheType.REDIS);
+		String math2 = testService.selectA();
+		System.out.println(math2);
 	}
 
 }

@@ -1,12 +1,10 @@
 package com.leweiyou.cache;
 
 /**
- * Cache的类型
+ * 定义项目支持的缓存类型，可以通过 CompositeCacheManager.setCacheType()设置当前想成的缓存类型
  * @author Zhangweican
  *
  */
-public class CacheType {
-	public final static String MAP = "map";
-	public final static String EHCACHE = "ehcache";
-	public final static String REDIS = "redis";
+public enum CacheType{
+	MAP,EHCACHE,REDIS,NONE
 }

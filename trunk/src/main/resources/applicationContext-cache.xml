@@ -14,6 +14,7 @@
     http://www.springframework.org/schema/cache  
 	http://www.springframework.org/schema/cache/spring-cache-3.2.xsd">
 
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 	<!--自动扫描含有@Service将其注入为bean -->
 	<context:component-scan base-package="com.leweiyou.cache" />
 	
@@ -34,7 +35,7 @@
         <property name="transactionAware" value="true"/>
     </bean>
     <bean id="ehcacheService" class="com.leweiyou.cache.ehcache.EhCacheService">
-        <property name="ehCacheCache" ref="ehCacheCache"/>
+        <property name="cacheManager" ref="ehCacheCache"/>
     </bean>
     
 	<!-- 内存缓存管理器 -->
@@ -49,7 +50,7 @@
 		<constructor-arg ref="jedisTemplate" />
 	</bean>
 	
-	<bean id="cacheManager" class="org.springframework.cache.support.CompositeCacheManager">  
+	<bean id="cacheManager" class="com.leweiyou.cache.CompositeCacheManager">  
 	    <property name="cacheManagers">  
 	        <list>  
 	            <ref bean="jedisCacheManager"/>  
@@ -59,6 +60,5 @@
 	    </property>  
 	    <property name="fallbackToNoOpCache" value="true"/>  
 	</bean>	
-
 
 </beans>

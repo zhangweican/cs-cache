@@ -19,6 +19,7 @@ public class TestCache {
 		logger.info("read db BBB");
 		return Math.random() * 10000 + "";
 	}
+	
 	@CacheEvict(value={"AAA"},allEntries=true)
 	public void deleteA(){
 		logger.info("delete AAA");

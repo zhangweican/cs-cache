@@ -1,5 +1,7 @@
 package com.leweiyou.cache.ehcache;
 
+import net.sf.ehcache.CacheManager;
+
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.ehcache.EhCacheCache;
@@ -9,10 +11,10 @@ import org.springframework.cache.ehcache.EhCacheCache;
  *
  */
 public class EhCacheService{
-	private EhCacheCache ehCacheCache;
-	
+	private CacheManager cacheManager;
+	private String name = "default";
 	public Cache getCache(){
-		return ehCacheCache;
+		return new EhCacheCache(this.cacheManager.getEhcache(name));
 	}
 	
 	public void clear() {
@@ -43,8 +45,8 @@ public class EhCacheService{
 		return getCache().putIfAbsent(key, value);
 	}
 
-	public void setEhCacheCache(EhCacheCache ehCacheCache) {
-		this.ehCacheCache = ehCacheCache;
+	public void setCacheManager(CacheManager cacheManager) {
+		this.cacheManager = cacheManager;
 	}
 
 }
