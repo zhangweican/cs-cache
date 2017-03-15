@@ -17,10 +17,21 @@ public class CacheTest {
 
 	@Test
 	public void test() {
-		String math = testService.select();
+		String math = testService.selectA();
 		System.out.println(math);
-		String math1 = testService.select();
+		String math1 = testService.selectB();
 		System.out.println(math1);
+		
+		testService.deleteA();
+		//testService.deleteB();
+		String math3 = testService.selectA();
+		System.out.println(math3);
+		String math2 = testService.selectB();
+		System.out.println(math2);
+		
+		testService.deleteA();
+		
+		
 	}
 
 }
