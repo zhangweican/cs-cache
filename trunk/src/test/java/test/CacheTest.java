@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import service.TestCache;
+import service.TestCacheService;
 
 import com.leweiyou.cache.CacheType;
 import com.leweiyou.cache.CompositeCacheManager;
@@ -14,14 +14,14 @@ import com.leweiyou.cache.redis.RedisCacheService;
 
 public class CacheTest {
 
-	private TestCache testService;
+	private TestCacheService testCacheService;
 	private RedisCacheService redisCacheService;
 	private EhCacheService ehCacheService;
 	private ConcurrentMapCacheService concurrentMapCacheService;
 	@Before
 	public void setUp() throws Exception {
 		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext-service.xml","applicationContext-cache.xml","applicationContext-cache-test.xml");
-		testService = applicationContext.getBean(TestCache.class);
+		testCacheService = applicationContext.getBean(TestCacheService.class);
 		redisCacheService = applicationContext.getBean(RedisCacheService.class);
 		ehCacheService = applicationContext.getBean(EhCacheService.class);
 		concurrentMapCacheService = applicationContext.getBean(ConcurrentMapCacheService.class);
@@ -29,32 +29,32 @@ public class CacheTest {
 
 	@Test
 	public void test() {
-		String math = testService.selectA();
+		String math = testCacheService.selectA();
 		System.out.println(math);
-		String math1 = testService.selectB();
+		String math1 = testCacheService.selectB();
 		System.out.println(math1);
 		
-		testService.deleteA();
+		testCacheService.deleteA();
 		//testService.deleteB();
-		String math3 = testService.selectA();
+		String math3 = testCacheService.selectA();
 		System.out.println(math3);
-		String math2 = testService.selectB();
+		String math2 = testCacheService.selectB();
 		System.out.println(math2);
 		
-		testService.deleteA();
+		testCacheService.deleteA();
 		
 		
 	}
 	@Test
 	public void test2() {
-		String math = testService.selectA();
+		String math = testCacheService.selectA();
 		System.out.println(math);
 		CompositeCacheManager.setCacheType(CacheType.MAP);
-		testService.deleteA();
-		String math1 = testService.selectA();
+		testCacheService.deleteA();
+		String math1 = testCacheService.selectA();
 		System.out.println(math1);
 		CompositeCacheManager.setCacheType(CacheType.REDIS);
-		String math2 = testService.selectA();
+		String math2 = testCacheService.selectA();
 		System.out.println(math2);
 	}
 

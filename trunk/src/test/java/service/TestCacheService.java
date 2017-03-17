@@ -6,8 +6,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TestCache {
-	private static Logger logger = Logger.getLogger(TestCache.class);
+public class TestCacheService {
+	private static Logger logger = Logger.getLogger(TestCacheService.class);
 	
 	@Cacheable(value={"AAA"})
 	public String selectA(){
