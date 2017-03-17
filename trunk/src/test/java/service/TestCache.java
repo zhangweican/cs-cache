@@ -1,4 +1,4 @@
-package com.leweiyou.cache;
+package service;
 
 import org.jboss.logging.Logger;
 import org.springframework.cache.annotation.CacheEvict;

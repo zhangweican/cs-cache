@@ -28,6 +28,10 @@ public class RedisCache implements Cache {
 	//存活时间
 	private Long liveTime = StringUtils.isEmpty(EnvUtil.getValue("redis.cache.live.time")) ? 86400 : Long.valueOf(EnvUtil.getValue("redis.cache.live.time"));
 	
+	public RedisCache(RedisTemplate<String, Object> redisTemplate){
+		this.redisTemplate = redisTemplate;
+	}
+	
 	public RedisTemplate<String, Object> getRedisTemplate() {
 		return redisTemplate;
 	}
