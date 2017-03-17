@@ -26,12 +26,6 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
 		</property>
 	</bean>
 	
-	
-	<!-- Redis service类 -->
-	<bean id="redisService" class="com.leweiyou.cache.redis.RedisService">
-		<property name="redisTemplate" ref="jedisTemplate"></property>
-	</bean>
-	
 	<!-- 队列模板 -->
 	<!-- 
 	<bean id="baseQueueListener" class="com.chinanetcenter.war.gcloud.redis.BaseRedisQueueListener"/>

@@ -1,20 +1,18 @@
-package com.leweiyou.cache.ehcache;
-
-import net.sf.ehcache.CacheManager;
+package com.leweiyou.cache.redis;
 
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
-import org.springframework.cache.ehcache.EhCacheCache;
+import org.springframework.data.redis.core.RedisTemplate;
 /**
  * 基于Ehcache的缓存类
  * @author Zhangweican
  *
  */
-public class EhCacheService{
-	private CacheManager cacheManager;
-	private String name = "ehcache";
+public class RedisCacheService{
+	private RedisTemplate redisTemplate;
+	
 	public Cache getCache(){
-		return new EhCacheCache(this.cacheManager.getEhcache(name));
+		return new RedisCache(redisTemplate);
 	}
 	
 	public void clear() {
@@ -45,8 +43,7 @@ public class EhCacheService{
 		return getCache().putIfAbsent(key, value);
 	}
 
-	public void setCacheManager(CacheManager cacheManager) {
-		this.cacheManager = cacheManager;
+	public void setRedisTemplate(RedisTemplate redisTemplate) {
+		this.redisTemplate = redisTemplate;
 	}
-
 }
