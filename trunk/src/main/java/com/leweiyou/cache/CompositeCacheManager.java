@@ -17,6 +17,7 @@ import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.data.redis.cache.RedisCacheManager;
 
 /**
+ * 可以通过静态方法setCacheType控制调用那个缓存<br>
  * 参照{@link org.springframework.cache.support.CompositeCacheManager}，再获取cache，根据CACHE_TYPE获取，如果没有，则按照顺序获取。
  * @author Zhangweican
  *
@@ -119,7 +120,7 @@ public class CompositeCacheManager implements CacheManager, InitializingBean{
 				}
 			}
 			break;
-		case NONE:
+		case NOOP:
 			for (CacheManager cacheManager : this.cacheManagers){
 				if(cacheManager instanceof NoOpCacheManager){
 					return cacheManager;

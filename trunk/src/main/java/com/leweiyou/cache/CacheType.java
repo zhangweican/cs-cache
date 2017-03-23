@@ -6,5 +6,5 @@ package com.leweiyou.cache;
  *
  */
 public enum CacheType{
-	MAP,EHCACHE,REDIS,NONE
+	MAP,EHCACHE,REDIS,NOOP
 }
