@@ -78,6 +78,9 @@ public class CompositeCacheManager implements CacheManager, InitializingBean{
 			Cache cache = cacheManager.getCache(name);
 			if (cache != null) {
 				return cache;
+			}else{
+				//对于查询不到的缓存直接返回空，而不在缓存集合中查询。
+				return null;
 			}
 		}
 		for (CacheManager cacheManager : this.cacheManagers) {
