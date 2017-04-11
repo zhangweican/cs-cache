@@ -46,6 +46,14 @@ public class CacheTest {
 		
 	}
 	@Test
+	public void test0() {
+		String math1 = testCacheService.testValueKey1();
+		System.out.println(math1);
+		String math2 = testCacheService.testValueKey2();
+		System.out.println(math2);
+		testCacheService.deleteValueKey();
+	}
+	@Test
 	public void test2() {
 		String math = testCacheService.selectA();
 		System.out.println(math);
