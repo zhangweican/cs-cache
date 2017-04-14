@@ -226,8 +226,8 @@ public class RedisCache implements Cache {
      * @param key
      * @return
      */
-    public boolean exists(final String key) {
-        return redisTemplate.execute(new RedisCallback() {
+	public boolean exists(final String key) {
+        return redisTemplate.execute(new RedisCallback<Boolean>() {
             public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
                 return connection.exists(key.getBytes());
             }
@@ -237,7 +237,7 @@ public class RedisCache implements Cache {
      * @return
      */
     public String flushDB() {
-        return redisTemplate.execute(new RedisCallback() {
+        return redisTemplate.execute(new RedisCallback<String>() {
             public String doInRedis(RedisConnection connection) throws DataAccessException {
                 connection.flushDb();
                 return "ok";
@@ -247,8 +247,8 @@ public class RedisCache implements Cache {
     /**
      * @return
      */
-    public long dbSize() {
-        return redisTemplate.execute(new RedisCallback() {
+    public Long dbSize() {
+        return redisTemplate.execute(new RedisCallback<Long>() {
             public Long doInRedis(RedisConnection connection) throws DataAccessException {
                 return connection.dbSize();
             }
@@ -259,9 +259,8 @@ public class RedisCache implements Cache {
      * @return
      */
     public String ping() {
-        return redisTemplate.execute(new RedisCallback() {
+        return redisTemplate.execute(new RedisCallback<String>() {
             public String doInRedis(RedisConnection connection) throws DataAccessException {
-
                 return connection.ping();
             }
         });
