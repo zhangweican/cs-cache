@@ -226,7 +226,8 @@ public class RedisCache implements Cache {
      * @param key
      * @return
      */
-    public boolean exists(final String key) {
+    @SuppressWarnings("unchecked")
+	public boolean exists(final String key) {
         return redisTemplate.execute(new RedisCallback() {
             public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
                 return connection.exists(key.getBytes());
@@ -236,6 +237,7 @@ public class RedisCache implements Cache {
     /**
      * @return
      */
+    @SuppressWarnings("unchecked")
     public String flushDB() {
         return redisTemplate.execute(new RedisCallback() {
             public String doInRedis(RedisConnection connection) throws DataAccessException {
@@ -247,6 +249,7 @@ public class RedisCache implements Cache {
     /**
      * @return
      */
+    @SuppressWarnings("unchecked")
     public long dbSize() {
         return redisTemplate.execute(new RedisCallback() {
             public Long doInRedis(RedisConnection connection) throws DataAccessException {
@@ -258,6 +261,7 @@ public class RedisCache implements Cache {
     /**
      * @return
      */
+    @SuppressWarnings("unchecked")
     public String ping() {
         return redisTemplate.execute(new RedisCallback() {
             public String doInRedis(RedisConnection connection) throws DataAccessException {
