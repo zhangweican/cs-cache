@@ -1,5 +1,7 @@
 package com.leweiyou.cache.redis;
 
+import java.util.Set;
+
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,7 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisCacheService{
 	private RedisTemplate redisTemplate;
 	
-	public Cache getCache(){
+	public RedisCache getCache(){
 		return new RedisCache(redisTemplate);
 	}
 	
@@ -43,7 +45,53 @@ public class RedisCacheService{
 		return getCache().putIfAbsent(key, value);
 	}
 
-	public void setRedisTemplate(RedisTemplate redisTemplate) {
+    /**
+     * 通过正则匹配keys
+     * 
+     * @param pattern
+     * @return
+     */
+    public Set keys(String pattern){
+    	return getCache().keys(pattern);
+    }
+
+    /**
+     * 检查key是否已经存在
+     * 
+     * @param key
+     * @return
+     */
+    public boolean exists(String key){
+    	return getCache().exists(key);
+    }
+
+    /**
+     * 清空redis 所有数据
+     * 
+     * @return
+     */
+    public String flushDB(){
+    	return getCache().flushDB();
+    }
+
+    /**
+     * 查看redis里有多少数据
+     */
+    public long dbSize(){
+    	return getCache().dbSize();
+    }
+
+    /**
+     * 检查是否连接成功
+     * 
+     * @return
+     */
+    public String ping(){
+    	return getCache().ping();
+    }	
+
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
+	
 }

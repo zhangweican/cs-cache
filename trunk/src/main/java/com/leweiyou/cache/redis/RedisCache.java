@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.cache.Cache;
@@ -212,5 +213,57 @@ public class RedisCache implements Cache {
 		});
 		return null;
 	}
+    /**
+     * @param pattern
+     * @return
+     */
+    public Set keys(String pattern) {
+        return redisTemplate.keys(pattern);
 
+    }
+
+    /**
+     * @param key
+     * @return
+     */
+    public boolean exists(final String key) {
+        return redisTemplate.execute(new RedisCallback() {
+            public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
+                return connection.exists(key.getBytes());
+            }
+        });
+    }	
+    /**
+     * @return
+     */
+    public String flushDB() {
+        return redisTemplate.execute(new RedisCallback() {
+            public String doInRedis(RedisConnection connection) throws DataAccessException {
+                connection.flushDb();
+                return "ok";
+            }
+        });
+    }
+    /**
+     * @return
+     */
+    public long dbSize() {
+        return redisTemplate.execute(new RedisCallback() {
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                return connection.dbSize();
+            }
+        });
+    }
+    
+    /**
+     * @return
+     */
+    public String ping() {
+        return redisTemplate.execute(new RedisCallback() {
+            public String doInRedis(RedisConnection connection) throws DataAccessException {
+
+                return connection.ping();
+            }
+        });
+    }
 }

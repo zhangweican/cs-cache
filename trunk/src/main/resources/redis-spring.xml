@@ -21,7 +21,10 @@ http://www.springframework.org/schema/beans/spring-beans.xsd">
 	</bean>
 	<bean id="jedisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
 		<property name="connectionFactory" ref="jedisConnectionFactory"></property>
-		<property name="defaultSerializer">
+		<property name="keySerializer">
+			<bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+		</property>
+		<property name="valueSerializer">
 			<bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
 		</property>
 	</bean>
