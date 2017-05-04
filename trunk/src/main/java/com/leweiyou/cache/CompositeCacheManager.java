@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -16,9 +17,12 @@ import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.data.redis.cache.RedisCacheManager;
 
+import com.leweiyou.tools.cfg.EnvUtil;
+
 /**
  * 可以通过静态方法setCacheType控制调用那个缓存<br>
  * 参照{@link org.springframework.cache.support.CompositeCacheManager}，再获取cache，根据CACHE_TYPE获取，如果没有，则按照顺序获取。
+ * <br>1.追加了设置redisCacheManager 读取配置文件(key:redis.cache.live.time)设置默认缓存时间
  * @author Zhangweican
  *
  */
@@ -50,6 +54,11 @@ public class CompositeCacheManager implements CacheManager, InitializingBean{
 	 * Specify the CacheManagers to delegate to.
 	 */
 	public void setCacheManagers(Collection<CacheManager> cacheManagers) {
+		if(cacheManagers != null && cacheManagers.size() > 0){
+			for(CacheManager cacheManager : cacheManagers){
+				setLiveTime(cacheManager);
+			}
+		}
 		this.cacheManagers.addAll(cacheManagers);
 	}
 
@@ -153,4 +162,18 @@ public class CompositeCacheManager implements CacheManager, InitializingBean{
 		ThreadLocal.set(type);
 	}
 	
+	/**
+	 * 设置存活时间
+	 * <br><font color=red>注：暂时只支持redis的的默认缓存时间</font>
+	 * @param cacheManager
+	 */
+	private void setLiveTime(CacheManager cacheManager){
+		if(cacheManager instanceof RedisCacheManager){
+			//存活时间
+			Long liveTime = StringUtils.isEmpty(EnvUtil.getValue("redis.cache.live.time")) ? 86400 : Long.valueOf(EnvUtil.getValue("redis.cache.live.time"));
+			RedisCacheManager redisCacheManager = (RedisCacheManager) cacheManager;
+			redisCacheManager.setDefaultExpiration(liveTime);
+		}
+
+	}
 }
