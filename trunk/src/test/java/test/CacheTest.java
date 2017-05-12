@@ -72,16 +72,16 @@ public class CacheTest {
 		String key2 = "def";
 		redisCacheService.put(key1, "abc_123");
 		redisCacheService.put(key2, "def_123");
-		System.out.println("key1=" + (redisCacheService.get(key1) == null ? null : redisCacheService.get(key1).get()));
-		System.out.println("key2=" + (redisCacheService.get(key2) == null ? null : redisCacheService.get(key2).get()));
+		System.out.println("key1=" + (redisCacheService.get(key1) == null ? null : redisCacheService.get(key1)));
+		System.out.println("key2=" + (redisCacheService.get(key2) == null ? null : redisCacheService.get(key2)));
 		System.out.println("del key1");
 		redisCacheService.evict(key1);
-		System.out.println("key1=" + (redisCacheService.get(key1) == null ? null : redisCacheService.get(key1).get()));
-		System.out.println("key2=" + (redisCacheService.get(key2) == null ? null : redisCacheService.get(key2).get()));
+		System.out.println("key1=" + (redisCacheService.get(key1) == null ? null : redisCacheService.get(key1)));
+		System.out.println("key2=" + (redisCacheService.get(key2) == null ? null : redisCacheService.get(key2)));
 		System.out.println("del key2");
 		//redisService.del(key2);
-		System.out.println("key1=" + (redisCacheService.get(key1) == null ? null : redisCacheService.get(key1).get()));
-		System.out.println("key2=" + (redisCacheService.get(key2) == null ? null : redisCacheService.get(key2).get()));
+		System.out.println("key1=" + (redisCacheService.get(key1) == null ? null : redisCacheService.get(key1)));
+		System.out.println("key2=" + (redisCacheService.get(key2) == null ? null : redisCacheService.get(key2)));
 	}
 	@Test
 	public void testconcurrentMapCacheService(){

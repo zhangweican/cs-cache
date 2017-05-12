@@ -20,8 +20,9 @@ import com.leweiyou.tools.cfg.EnvUtil;
 /**
  * Redis缓存类
  * @author Zhangweican
- *
+ * <font color=red>可以参考spring自带的{@link org.springframework.data.redis.cache.RedisCache}</font>
  */
+@Deprecated
 public class RedisCache implements Cache {
 
 	private RedisTemplate<String, Object> redisTemplate;

@@ -170,7 +170,7 @@ public class CompositeCacheManager implements CacheManager, InitializingBean{
 	private void setLiveTime(CacheManager cacheManager){
 		if(cacheManager instanceof RedisCacheManager){
 			//存活时间
-			Long liveTime = StringUtils.isEmpty(EnvUtil.getValue("redis.cache.expire.time")) ? 0 : Long.valueOf(EnvUtil.getValue("redis.cache.live.time"));
+			Long liveTime = StringUtils.isEmpty(EnvUtil.getValue("redis.cache.expire.time")) ? 0 : Long.valueOf(EnvUtil.getValue("redis.cache.expire.time"));
 			RedisCacheManager redisCacheManager = (RedisCacheManager) cacheManager;
 			redisCacheManager.setDefaultExpiration(liveTime);
 		}
