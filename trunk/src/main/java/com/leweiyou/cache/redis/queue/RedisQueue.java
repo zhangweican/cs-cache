@@ -138,6 +138,8 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 
 	@Override
 	public void destroy() throws Exception {
+		logger.info("关闭redis队列");
+		lock.unlock();
 		shutdown();
 		RedisConnectionUtils.releaseConnection(connection, factory);
 	}
