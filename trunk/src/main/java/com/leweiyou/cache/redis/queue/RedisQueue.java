@@ -42,10 +42,6 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 	private int poolsNumbers = StringUtils.isEmpty(EnvUtil.getValue("redis.queue.thread.numbers")) ? 10 : Integer.valueOf(EnvUtil.getValue("redis.queue.thread.numbers"));
 	private ExecutorService pools = Executors.newFixedThreadPool(poolsNumbers);
 	
-	//private Thread listenerThread;
-	
-	private boolean isClosed;
-	
 	public void setRedisTemplate(RedisTemplate redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
@@ -142,9 +138,6 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 
 	@Override
 	public void destroy() throws Exception {
-		if(isClosed){
-			return;
-		}
 		shutdown();
 		RedisConnectionUtils.releaseConnection(connection, factory);
 	}
