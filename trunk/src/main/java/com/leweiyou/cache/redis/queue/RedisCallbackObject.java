@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 /**
  * 中间传输回调对象
  * @author Zhangweican
@@ -13,7 +11,7 @@ import org.apache.log4j.Logger;
  * @param <T>
  */
 public abstract class RedisCallbackObject<T> implements Serializable{
-	protected Logger logger = Logger.getLogger(this.getClass());
+	
 	//扩展属相
 	private Map<String,Object> extAttr = new HashMap<String,Object>();
 	
