@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -37,6 +36,7 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 	private RedisConnection connection;//for blocking
 	private BoundListOperations<String, T> listOperations;//noblocking
 	
+	private Lock lock = new ReentrantLock();//基于底层IO阻塞考虑
 	
 	private RedisQueueListener listener;//异步回调
 	private int poolsNumbers = StringUtils.isEmpty(EnvUtil.getValue("redis.queue.thread.numbers")) ? 10 : Integer.valueOf(EnvUtil.getValue("redis.queue.thread.numbers"));
@@ -75,15 +75,20 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 	 * @return
 	 */
 	public T takeFromTail(int timeout) throws InterruptedException{ 
-		List<byte[]> results = connection.bRPop(timeout, rawKey);
-		if(CollectionUtils.isEmpty(results)){
-			return null;
+		lock.lockInterruptibly();
+		try{
+			List<byte[]> results = connection.bRPop(timeout, rawKey);
+			if(CollectionUtils.isEmpty(results)){
+				return null;
+			}
+			return (T)redisTemplate.getValueSerializer().deserialize(results.get(1));
+		}finally{
+			lock.unlock();
 		}
-		return (T)redisTemplate.getValueSerializer().deserialize(results.get(1));
 	}
 	
 	public T takeFromTail() throws InterruptedException{
-		return takeFromHead(0);
+		return takeFromHead(5);
 	}
 	
 	/**
@@ -115,33 +120,36 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 	 * @return
 	 */
 	public T takeFromHead(int timeout) throws InterruptedException{
-		List<byte[]> results = connection.bLPop(timeout, rawKey);
-		if(CollectionUtils.isEmpty(results)){
-			return null;
+		lock.lockInterruptibly();
+		try{
+			List<byte[]> results = connection.bLPop(timeout, rawKey);
+			if(CollectionUtils.isEmpty(results)){
+				return null;
+			}
+			return (T)redisTemplate.getValueSerializer().deserialize(results.get(1));
+		}finally{
+			lock.unlock();
 		}
-		return (T)redisTemplate.getValueSerializer().deserialize(results.get(1));
 	}
 	
 	public T takeFromHead() throws InterruptedException{
-		return takeFromHead(0);
+		return takeFromHead(5);
 	}
 
 	@Override
 	public void destroy() throws Exception {
-		logger.info("开始关闭redis队列");
+		logger.info("关闭redis队列");
+		//lock.unlock();
 		shutdown();
 		RedisConnectionUtils.releaseConnection(connection, factory);
-		logger.info("关闭redis队列完成");
 	}
 	
 	private void shutdown(){
-	    try {  
-	    	pools.shutdownNow();  
-	    } catch (Exception e) {  
-	        // awaitTermination方法被中断的时候也中止线程池中全部的线程的执行。
-	    	logger.info("关闭redis执行线程失败");
-	        pools.shutdownNow();  
-	    }
+		try{
+			pools.shutdownNow();
+		}catch(Exception e){
+			//
+		}
 	}
 	
 	class ListenerThread extends Thread {
