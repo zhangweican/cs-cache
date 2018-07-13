@@ -171,6 +171,12 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 						}catch(Exception e){
 							logger.error("队列：" + key + " 线程：" + number + " 处理异常",e);
 						}
+					}else{
+						try {
+							Thread.sleep(30000);
+						} catch (Exception e) {
+							//
+						}
 					}
 				}
 			}catch(InterruptedException e){
