@@ -37,7 +37,7 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 	private BoundListOperations<String, T> listOperations;//noblocking
 	
 	private Lock lock = new ReentrantLock();//基于底层IO阻塞考虑
-	
+	private boolean isStarted = false;
 	private RedisQueueListener listener;//异步回调
 	private int poolsNumbers = StringUtils.isEmpty(EnvUtil.getValue("redis.queue.thread.numbers")) ? 10 : Integer.valueOf(EnvUtil.getValue("redis.queue.thread.numbers"));
 	private ExecutorService pools = Executors.newFixedThreadPool(poolsNumbers);
@@ -66,6 +66,7 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 				pools.execute(new ListenerThread(i + 1));
 			}
 		}
+		isStarted = true;
 	}
 	
 	
@@ -139,6 +140,7 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 	@Override
 	public void destroy() throws Exception {
 		logger.info("关闭redis队列");
+		isStarted = false;
 		//lock.unlock();
 		shutdown();
 		RedisConnectionUtils.releaseConnection(connection, factory);
@@ -162,7 +164,7 @@ public class RedisQueue<T extends RedisCallbackObject<?>> implements Initializin
 		@Override
 		public void run(){
 			try{
-				while(true){
+				while(isStarted){
 					T value = takeFromHead();
 					if(value != null){
 						try{
